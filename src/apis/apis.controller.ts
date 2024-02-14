@@ -1,34 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ApisService } from './apis.service';
 import { CreateApiDto } from './dto/create-api.dto';
 import { UpdateApiDto } from './dto/update-api.dto';
 
-@Controller('apis')
+@Controller('CardServices')
 export class ApisController {
   constructor(private readonly apisService: ApisService) {}
 
-  @Post()
-  create(@Body() createApiDto: CreateApiDto) {
-    return this.apisService.create(createApiDto);
+  @Get('/Transaction/V2/AccountTransaction')
+  accountTransaction() {
+    return this.apisService.accountTransaction();
   }
 
-  @Get()
-  findAll() {
-    return this.apisService.findAll();
+  @Get('/Transaction/V2/CardNonmon')
+  cardNonmon() {
+    return this.apisService.cardNonmon();
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.apisService.findOne(+id);
+  @Get('/Transaction/V2/ClientCreate')
+  clientCreate() {
+    return this.apisService.clientCreate();
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateApiDto: UpdateApiDto) {
-    return this.apisService.update(+id, updateApiDto);
+  @Get('/Enquiry/V2/AccountBalanceEnquiry')
+  accountBalanceEnquiry() {
+    return this.apisService.accountBalanceEnquiry();
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.apisService.remove(+id);
+  @Get('/Transaction/V2/P2PTransfer')
+  p2PTransfer() {
+    return this.apisService.p2PTransfer();
   }
 }
