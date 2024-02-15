@@ -11,7 +11,7 @@ async function bootstrap() {
     origin: '*',
   });
 
-  const port = appConfig().port || 3000;
+  const port = appConfig().port || 2443;
   await app.listen(port);
   console.log(`service is listening on http://localhost:${port}`);
 }
