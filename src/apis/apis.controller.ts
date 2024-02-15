@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { ApisService } from './apis.service';
 import { CreateApiDto } from './dto/create-api.dto';
@@ -15,25 +17,51 @@ import { UpdateApiDto } from './dto/update-api.dto';
 export class ApisController {
   constructor(private readonly apisService: ApisService) {}
 
-  @Get('/Transaction/V2/AccountTransaction')
-  accountTransaction() {
-    return this.apisService.accountTransaction();
+  @Post('/Transaction/V2/AccountTransaction')
+  accountTransaction(@Req() req, @Res() res) {
+    const data = this.apisService.accountTransaction();
+    const customHeaderValue = JSON.stringify(
+      data.response_account_transaction.header,
+    );
+    res.setHeader('X-Custom-Header', customHeaderValue);
+    return res.json(data.response_account_transaction.body);
   }
 
-  @Get('/Transaction/V2/CardNonmon')
-  cardNonmon() {
-    return this.apisService.cardNonmon();
+  @Post('/Transaction/V2/CardNonmon')
+  cardNonmon(@Req() req, @Res() res) {
+    const data = this.apisService.cardNonmon();
+    const customHeaderValue = JSON.stringify(data.response_card_nonmon.header);
+    res.setHeader('X-Custom-Header', customHeaderValue);
+    return res.json({});
   }
-  @Get('/Transaction/V2/ClientCreate')
-  clientCreate() {
-    return this.apisService.clientCreate();
+
+  @Post('/Transaction/V2/ClientCreate')
+  clientCreate(@Req() req, @Res() res) {
+    const data = this.apisService.clientCreate();
+    const customHeaderValue = JSON.stringify(
+      data.response_client_create.header,
+    );
+    res.setHeader('X-Custom-Header', customHeaderValue);
+    return res.json(data.response_client_create.body);
   }
-  @Get('/Enquiry/V2/AccountBalanceEnquiry')
-  accountBalanceEnquiry() {
-    return this.apisService.accountBalanceEnquiry();
+
+  @Post('/Enquiry/V2/AccountBalanceEnquiry')
+  accountBalanceEnquiry(@Req() req, @Res() res) {
+    const data = this.apisService.accountBalanceEnquiry();
+    const customHeaderValue = JSON.stringify(
+      data.response_account_balance_enquiry.header,
+    );
+    res.setHeader('X-Custom-Header', customHeaderValue);
+    return res.json(data.response_account_balance_enquiry.body);
   }
-  @Get('/Transaction/V2/P2PTransfer')
-  p2PTransfer() {
-    return this.apisService.p2PTransfer();
+
+  @Post('/Transaction/V2/P2PTransfer')
+  p2PTransfer(@Req() req, @Res() res) {
+    const data = this.apisService.p2PTransfer();
+    const customHeaderValue = JSON.stringify(
+      data.response_p_2_p_transfer.header,
+    );
+    res.setHeader('X-Custom-Header', customHeaderValue);
+    return res.json(data.response_p_2_p_transfer.body);
   }
 }

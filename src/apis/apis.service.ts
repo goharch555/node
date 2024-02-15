@@ -5,8 +5,8 @@ import { UpdateApiDto } from './dto/update-api.dto';
 @Injectable()
 export class ApisService {
   accountTransaction() {
-    return {
-      NISrvResponse: {
+    try {
+      return {
         response_account_transaction: {
           header: {
             msg_id: 'LPS000027937',
@@ -40,12 +40,14 @@ export class ApisService {
             decision_count: '0',
           },
         },
-      },
-    };
+      };
+    } catch (error) {
+      return error;
+    }
   }
   cardNonmon() {
-    return {
-      NISrvResponse: {
+    try {
+      return {
         response_card_nonmon: {
           header: {
             msg_id: 'LOS000010036',
@@ -65,13 +67,15 @@ export class ApisService {
             error_description: 'Success',
           },
         },
-      },
-    };
+      };
+    } catch (error) {
+      return error;
+    }
   }
 
   clientCreate() {
-    return {
-      NISrvResponse: {
+    try {
+      return {
         response_client_create: {
           header: {
             msg_id: 'LOS000010199',
@@ -166,13 +170,15 @@ export class ApisService {
             ],
           },
         },
-      },
-    };
+      };
+    } catch (error) {
+      return error;
+    }
   }
 
   accountBalanceEnquiry() {
-    return {
-      NISrvResponse: {
+    try {
+      return {
         response_account_balance_enquiry: {
           header: {
             msg_id: 'LPS000028092',
@@ -213,13 +219,15 @@ export class ApisService {
             ],
           },
         },
-      },
-    };
+      };
+    } catch (error) {
+      return error;
+    }
   }
 
   p2PTransfer() {
-    return {
-      NISrvResponse: {
+    try {
+      return {
         response_p_2_p_transfer: {
           header: {
             msg_id: 'LPS000027441',
@@ -256,7 +264,9 @@ export class ApisService {
             target_decision_count: '0',
           },
         },
-      },
-    };
+      };
+    } catch (error) {
+      return error;
+    }
   }
 }
