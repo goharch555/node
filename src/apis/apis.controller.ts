@@ -20,48 +20,30 @@ export class ApisController {
   @Post('/Transaction/V2/AccountTransaction')
   async accountTransaction(@Req() req, @Res() res) {
     const data = await this.apisService.accountTransaction();
-    const customHeaderValue = JSON.stringify(
-      data.response_account_transaction.header,
-    );
-    res.setHeader('X-Custom-Header', customHeaderValue);
-    return res.json(data.response_account_transaction.body);
+    return res.json(data);
   }
 
   @Post('/Transaction/V2/CardNonmon')
   async cardNonmon(@Req() req, @Res() res) {
     const data = await this.apisService.cardNonmon();
-    const customHeaderValue = JSON.stringify(data.response_card_nonmon.header);
-    res.setHeader('X-Custom-Header', customHeaderValue);
-    return res.json({});
+    return res.json(data);
   }
 
   @Post('/Transaction/V2/ClientCreate')
   async clientCreate(@Req() req, @Res() res) {
     const data = await this.apisService.clientCreate();
-    const customHeaderValue = JSON.stringify(
-      data.response_client_create.header,
-    );
-    res.setHeader('X-Custom-Header', customHeaderValue);
-    return res.json(data.response_client_create.body);
+    return res.json(data);
   }
 
   @Post('/Enquiry/V2/AccountBalanceEnquiry')
   async accountBalanceEnquiry(@Req() req, @Res() res) {
     const data = await this.apisService.accountBalanceEnquiry();
-    const customHeaderValue = JSON.stringify(
-      data.response_account_balance_enquiry.header,
-    );
-    res.setHeader('X-Custom-Header', customHeaderValue);
-    return res.json(data.response_account_balance_enquiry.body);
+    return res.json(data);
   }
 
   @Post('/Transaction/V2/P2PTransfer')
   async p2PTransfer(@Req() req, @Res() res) {
     const data = await this.apisService.p2PTransfer();
-    const customHeaderValue = JSON.stringify(
-      data.response_p_2_p_transfer.header,
-    );
-    res.setHeader('X-Custom-Header', customHeaderValue);
-    return res.json(data.response_p_2_p_transfer.body);
+    return res.json(data);
   }
 }
