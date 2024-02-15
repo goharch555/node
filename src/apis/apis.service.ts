@@ -6,7 +6,6 @@ import { UpdateApiDto } from './dto/update-api.dto';
 export class ApisService {
   accountTransaction() {
     try {
-      console.log('hello');
       return {
         NISrvResponse: {
           response_account_transaction: {
