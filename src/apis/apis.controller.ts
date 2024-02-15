@@ -18,8 +18,8 @@ export class ApisController {
   constructor(private readonly apisService: ApisService) {}
 
   @Post('/Transaction/V2/AccountTransaction')
-  accountTransaction(@Req() req, @Res() res) {
-    const data = this.apisService.accountTransaction();
+  async accountTransaction(@Req() req, @Res() res) {
+    const data = await this.apisService.accountTransaction();
     const customHeaderValue = JSON.stringify(
       data.response_account_transaction.header,
     );
@@ -28,16 +28,16 @@ export class ApisController {
   }
 
   @Post('/Transaction/V2/CardNonmon')
-  cardNonmon(@Req() req, @Res() res) {
-    const data = this.apisService.cardNonmon();
+  async cardNonmon(@Req() req, @Res() res) {
+    const data = await this.apisService.cardNonmon();
     const customHeaderValue = JSON.stringify(data.response_card_nonmon.header);
     res.setHeader('X-Custom-Header', customHeaderValue);
     return res.json({});
   }
 
   @Post('/Transaction/V2/ClientCreate')
-  clientCreate(@Req() req, @Res() res) {
-    const data = this.apisService.clientCreate();
+  async clientCreate(@Req() req, @Res() res) {
+    const data = await this.apisService.clientCreate();
     const customHeaderValue = JSON.stringify(
       data.response_client_create.header,
     );
@@ -46,8 +46,8 @@ export class ApisController {
   }
 
   @Post('/Enquiry/V2/AccountBalanceEnquiry')
-  accountBalanceEnquiry(@Req() req, @Res() res) {
-    const data = this.apisService.accountBalanceEnquiry();
+  async accountBalanceEnquiry(@Req() req, @Res() res) {
+    const data = await this.apisService.accountBalanceEnquiry();
     const customHeaderValue = JSON.stringify(
       data.response_account_balance_enquiry.header,
     );
@@ -56,8 +56,8 @@ export class ApisController {
   }
 
   @Post('/Transaction/V2/P2PTransfer')
-  p2PTransfer(@Req() req, @Res() res) {
-    const data = this.apisService.p2PTransfer();
+  async p2PTransfer(@Req() req, @Res() res) {
+    const data = await this.apisService.p2PTransfer();
     const customHeaderValue = JSON.stringify(
       data.response_p_2_p_transfer.header,
     );
