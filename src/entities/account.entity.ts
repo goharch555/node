@@ -16,7 +16,13 @@ export class AccountEntity extends BaseEntity<AccountEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'text', name: 'customer_id', unique: true, nullable: false })
+  @Column({
+    type: 'text',
+    name: 'customer_id',
+    length: 200,
+    unique: true,
+    nullable: false,
+  })
   customerId: string;
 
   @Column({
