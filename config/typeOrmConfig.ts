@@ -10,7 +10,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: appConfig().dbpassword,
   database: appConfig().database,
   entities: ['dist/**/**.entity{.ts,.js}'],
-  synchronize: true,
+  synchronize: false,
   migrationsRun: false,
   logging: true,
   migrations: [__dirname + '/migrations/*.ts'],
