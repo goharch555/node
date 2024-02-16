@@ -17,16 +17,17 @@ export class AccountEntity extends BaseEntity<AccountEntity> {
   id: number;
 
   @Column({
-    type: 'text',
+    type: 'varchar',
+    length: 256,
     name: 'customer_id',
-    length: 200,
     unique: true,
     nullable: false,
   })
   customerId: string;
 
   @Column({
-    type: 'text',
+    type: 'varchar',
+    length: 256,
     name: 'account_number',
     unique: true,
     nullable: false,
