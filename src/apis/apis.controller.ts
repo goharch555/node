@@ -12,6 +12,7 @@ import {
 import { ApisService } from './apis.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { CreateClientDto } from './dto/create-client.dto';
+import { TransactionDto } from './dto/transaction.dto';
 // import { UpdateApiDto } from './dto/update-api.dto';
 
 @Controller('CardServices')
@@ -19,8 +20,8 @@ export class ApisController {
   constructor(private readonly apisService: ApisService) {}
 
   @Post('/Transaction/V2/AccountTransaction')
-  async accountTransaction(@Req() req, @Res() res) {
-    const data = await this.apisService.accountTransaction(req.body);
+  async accountTransaction(@Body() transactionDto: TransactionDto, @Res() res) {
+    const data = await this.apisService.accountTransaction(transactionDto);
     return res.json(data);
   }
 

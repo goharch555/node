@@ -12,6 +12,8 @@ import { ClientsEntity } from 'src/entities/client.entity';
 import { Repository } from 'typeorm';
 import { errorMessages } from 'src/helper/constant-messages';
 import { CreateClientDto } from './dto/create-client.dto';
+import { TransactionDto } from './dto/transaction.dto';
+import { TransactionsEntity } from 'src/entities/transaction.entity';
 
 @Injectable()
 export class ApisService {
@@ -20,13 +22,56 @@ export class ApisService {
     private readonly _AccountEntityRepository: Repository<AccountEntity>,
     @InjectRepository(ClientsEntity)
     private readonly _ClientsEntityRepository: Repository<ClientsEntity>,
+    @InjectRepository(TransactionsEntity)
+    private readonly _TransactionsEntity: Repository<TransactionsEntity>,
   ) {}
 
-  accountTransaction(data: any) {
+  async accountTransaction(data: TransactionDto) {
     try {
-      if (Object.keys(data).length === 0) {
-        throw new NotFoundException('Data not found');
+      const account = await this._AccountEntityRepository.findOne({
+        where: {
+          accountNumber:
+            data.NISrvRequest.request_account_transaction.body
+              .account_identifier_id,
+        },
+      });
+      if (!account) {
+        return errorMessages.accountNotFound;
       }
+      const transaction = await this._TransactionsEntity.create({
+        account: account,
+        amount:
+          data.NISrvRequest.request_account_transaction.body.transaction.amount,
+        billingAmount:
+          data.NISrvRequest.request_account_transaction.body.transaction
+            .billing_amount,
+        billingCurrency:
+          data.NISrvRequest.request_account_transaction.body.transaction
+            .billing_currency,
+        externalRefNumber:
+          data.NISrvRequest.request_account_transaction.body.transaction
+            .external_ref_number,
+        transactionRefNumber:
+          data.NISrvRequest.request_account_transaction.body.transaction
+            .transaction_ref_number,
+        transactionCode:
+          data.NISrvRequest.request_account_transaction.body.transaction
+            .transaction_code,
+        city: data.NISrvRequest.request_account_transaction.body.transaction
+          .city,
+        country:
+          data.NISrvRequest.request_account_transaction.body.transaction
+            .country,
+        currency:
+          data.NISrvRequest.request_account_transaction.body.transaction
+            .currency,
+        srcApplication:
+          data.NISrvRequest.request_account_transaction.header.src_application,
+        targetApplication:
+          data.NISrvRequest.request_account_transaction.header
+            .target_application,
+      });
+      await this._TransactionsEntity.save(transaction);
       return {
         NISrvResponse: {
           response_account_transaction: {
@@ -476,7 +521,7 @@ export class ApisService {
   async getAccountDetails(accountId: string): Promise<AccountEntity> {
     const account = await this._AccountEntityRepository.findOne({
       where: { accountNumber: accountId },
-      relations: ['client'],
+      relations: ['client', 'transactions'],
     });
 
     if (!account) {

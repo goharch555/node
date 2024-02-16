@@ -1,6 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { ClientsEntity } from './client.entity';
+import { TransactionsEntity } from './transaction.entity';
 
 // todo.. add explanation of each of below and sample usage
 // keep tables names in sync . tbl_auth and tbl_plans?
@@ -25,4 +32,7 @@ export class AccountEntity extends BaseEntity<AccountEntity> {
 
   @OneToOne(() => ClientsEntity, (client) => client.account)
   client: ClientsEntity;
+
+  @OneToMany(() => TransactionsEntity, (transaction) => transaction.account)
+  transactions: TransactionsEntity[];
 }
