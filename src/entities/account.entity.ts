@@ -37,6 +37,9 @@ export class AccountEntity extends BaseEntity<AccountEntity> {
   @Column({ type: 'text', name: 'currency' })
   currency: string;
 
+  @Column({ type: 'text', name: 'balance' })
+  balance: string;
+
   @OneToOne(() => ClientsEntity, (client) => client.account)
   client: ClientsEntity;
 

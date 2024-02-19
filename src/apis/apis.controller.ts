@@ -64,5 +64,23 @@ export class ApisController {
       return { success: false, error: error.message };
     }
   }
+
+  @Post(':id/update-balance/:operation')
+  async updateBalance(
+    @Param('id') accountId: string,
+    @Param('operation') operation: 'deposit' | 'withdraw',
+    @Body('amount') amount: number,
+  ) {
+    try {
+      const updatedAccount = await this.apisService.updateBalance(
+        accountId,
+        amount,
+        operation,
+      );
+      return { message: 'Balance updated successfully', data: updatedAccount };
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
 }
 //

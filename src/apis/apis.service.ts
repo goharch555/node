@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 // import { UpdateApiDto } from './dto/update-api.dto';
 import {
@@ -38,6 +42,18 @@ export class ApisService {
       if (!account) {
         return errorMessages.accountNotFound;
       }
+      const currentBalance = isNaN(parseFloat(account.balance))
+        ? 0
+        : parseFloat(account.balance);
+
+      const transfer_amount = parseFloat(
+        data.NISrvRequest.request_account_transaction.body.transaction.amount,
+      );
+
+      if (currentBalance < transfer_amount) {
+        throw new ConflictException('Insufficient balance for transfer');
+      }
+
       const transaction = await this._TransactionsEntity.create({
         account: account,
         amount:
@@ -72,6 +88,13 @@ export class ApisService {
             .target_application,
       });
       await this._TransactionsEntity.save(transaction);
+      const updated_amount_after_deduct = (
+        currentBalance - transfer_amount
+      ).toString();
+      await this._AccountEntityRepository.save({
+        ...account,
+        balance: updated_amount_after_deduct,
+      });
       return {
         NISrvResponse: {
           response_account_transaction: {
@@ -465,11 +488,91 @@ export class ApisService {
       return error;
     }
   }
-  p2PTransfer(data: any) {
+  async p2PTransfer(data: any) {
     try {
       if (Object.keys(data).length === 0) {
         throw new NotFoundException('Data not found');
       }
+      const src_Account =
+        data.NISrvRequest.request_p_2_p_transfer.body.source_identifier_id;
+      const amount =
+        data.NISrvRequest.request_p_2_p_transfer.body.transaction.amount;
+      const tar_Account =
+        data.NISrvRequest.request_p_2_p_transfer.body.target_identifier_id;
+
+      const sourceAccount = await this._AccountEntityRepository.findOne({
+        where: {
+          accountNumber: src_Account,
+        },
+        relations: ['client'],
+      });
+
+      const targetAccount = await this._AccountEntityRepository.findOne({
+        where: {
+          accountNumber: tar_Account,
+        },
+        relations: ['client'],
+      });
+
+      if (!sourceAccount || !sourceAccount.client) {
+        throw new NotFoundException(
+          `Account Not Found ${src_Account} or Client Not Found`,
+        );
+      }
+
+      if (!targetAccount || !targetAccount.client) {
+        throw new NotFoundException(
+          `Account Not Found ${tar_Account} or Client Not Found`,
+        );
+      }
+      const currentBalance = isNaN(parseFloat(sourceAccount.balance))
+        ? 0
+        : parseFloat(sourceAccount.balance);
+
+      if (currentBalance < parseFloat(amount)) {
+        throw new ConflictException('Insufficient balance for withdrawal');
+      }
+      const updated_amount_after_deduct = (
+        currentBalance - parseFloat(amount)
+      ).toString();
+      const updated_amount_after_transfer =
+        parseFloat(targetAccount.balance) + parseFloat(amount);
+
+      await this._AccountEntityRepository.save({
+        ...sourceAccount,
+        balance: updated_amount_after_deduct,
+      });
+      await this._AccountEntityRepository.save({
+        ...targetAccount,
+        balance: updated_amount_after_transfer.toString(),
+      });
+      const transaction = await this._TransactionsEntity.create({
+        account: sourceAccount,
+        amount: amount,
+        billingAmount: amount,
+        billingCurrency:
+          data.NISrvRequest.request_p_2_p_transfer.body.transaction
+            .billing_currency,
+        city: data.NISrvRequest.request_p_2_p_transfer.body.transaction.city,
+        country:
+          data.NISrvRequest.request_p_2_p_transfer.body.transaction.country,
+        currency:
+          data.NISrvRequest.request_p_2_p_transfer.body.transaction
+            .billing_currency,
+        externalRefNumber:
+          data.NISrvRequest.request_p_2_p_transfer.body.transaction
+            .external_ref_number,
+        srcApplication:
+          data.NISrvRequest.request_p_2_p_transfer.header.src_application,
+        targetAccountNumber: targetAccount.accountNumber,
+        targetApplication:
+          data.NISrvRequest.request_p_2_p_transfer.header.target_application,
+        transactionRefNumber:
+          data.NISrvRequest.request_p_2_p_transfer.body.transaction
+            .transaction_ref_number,
+      });
+      await this._TransactionsEntity.save(transaction);
+
       return {
         NISrvResponse: {
           response_p_2_p_transfer: {
@@ -529,5 +632,35 @@ export class ApisService {
     }
 
     return account;
+  }
+
+  async updateBalance(
+    accountId: string,
+    amount: number,
+    operation: 'deposit' | 'withdraw',
+  ): Promise<AccountEntity> {
+    const account = await this._AccountEntityRepository.findOne({
+      where: { accountNumber: accountId },
+      relations: ['client'],
+    });
+
+    if (!account || !account.client) {
+      throw new NotFoundException('Account not found or client not found');
+    }
+
+    const currentBalance = isNaN(parseFloat(account.balance))
+      ? 0
+      : parseFloat(account.balance);
+
+    if (operation === 'withdraw' && currentBalance < amount) {
+      throw new Error('Insufficient balance for withdrawal');
+    }
+
+    account.balance =
+      operation === 'deposit'
+        ? (currentBalance + amount).toString()
+        : (currentBalance - amount).toString();
+
+    return this._AccountEntityRepository.save(account);
   }
 }

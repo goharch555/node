@@ -16,7 +16,7 @@ export class TransactionsEntity extends BaseEntity<TransactionsEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'text', name: 'transaction_code', nullable: false })
+  @Column({ type: 'text', name: 'transaction_code', nullable: true })
   transactionCode: string;
 
   @Column({ type: 'text', name: 'amount', nullable: false })
@@ -47,6 +47,9 @@ export class TransactionsEntity extends BaseEntity<TransactionsEntity> {
 
   @Column({ type: 'text', name: 'target_application', nullable: false })
   targetApplication: string;
+
+  @Column({ type: 'text', name: 'target_account_number', nullable: true })
+  targetAccountNumber: string;
 
   @ManyToOne(() => AccountEntity, (account) => account.transactions)
   @JoinColumn({ name: 'account_id' })
