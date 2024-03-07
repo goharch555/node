@@ -27,4 +27,4 @@ npm install
 /usr/local/bin/pm2 start ni-api-gateway --name ni-api-gateway
 
 # Output
-echo "Deployment successful. The app is running on port 2443 with a new PID."
+echo "Deployment successful. The app is running on port 2443 with a new pid."
