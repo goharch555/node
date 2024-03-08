@@ -9,22 +9,22 @@ cp -r * /var/nodeapp/ni-api-gateway
 # Navigate to the project directory
 cd /var/nodeapp/ni-api-gateway
 
-# Find the process PID of instance 2443
-PID=$(lsof -t -i :2443)
+# NPM install new modules.
+npm i
 
-# If the PID is not empty, then kill it
-if [ -n "$PID" ]; then
-    kill $PID
+# BUILD THE PROJECT
+npm run build
+
+# Check if the PM2 process is running
+/usr/local/bin/pm2 list | grep ni-api-gateway > /dev/null
+
+if [ $? -eq 0 ]; then
+    # Restart the PM2 process
+    /usr/local/bin/pm2 restart ni-api-gateway
+else
+    # Start the PM2 process
+    /usr/local/bin/pm2 start dist/src/main.js --name ni-api-gateway
 fi
 
-# Stop the PM2 process
-/usr/local/bin/pm2 stop ni-api-gateway
-
-# Install Node.js dependencies
-npm install
-
-# Start the app with PM2
-/usr/local/bin/pm2 start ni-api-gateway --name ni-api-gateway
-
 # Output
-echo "Deployment successful. The app is running on port 2443 with a new pid."
+echo "Deployment successful. The app is running via PM2."
