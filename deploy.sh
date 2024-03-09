@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Navigate to the directory of the Jenkins workspace
-cd /var/lib/jenkins/workspace/nodeapp
+cd /var/www/workspace/nodeapp1
 
 # Copy files to the project directory
-cp -r * /var/nodeapp/ni-api-gateway
+cp -r * /var/nodeapp/
 
 # Navigate to the project directory
-cd /var/nodeapp/ni-api-gateway
+cd /var/nodeapp/
 
 # NPM install new modules.
 npm i
