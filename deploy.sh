@@ -4,10 +4,10 @@
 cd /var/www/workspace/nodeapp1
 
 # Copy files to the project directory
-cp -r * /var/nodeapp/
+cp -r * /var/www/nodeapp
 
 # Navigate to the project directory
-cd /var/nodeapp/
+cd /var/www/nodeapp
 
 # NPM install new modules.
 npm i
