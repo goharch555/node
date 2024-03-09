@@ -11,7 +11,7 @@ pipeline {
         stage('Move to Project Directory') {
             steps {
                 // Move to the project directory
-                sh 'cd /var/nodeapp/ni-api-gateway'
+                sh 'cd /var/nodeapp/'
             }
         }
         stage('Execute Script') {
