@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Navigate to the directory of the Jenkins workspace
-cd /var/www/ni-api-gateway-jenkins
+cd /var/www/ni-api-gateway-jenkins/workspace/node-backend
+
+# Copy files to the project directory
+cp -r * /var/www/ni-api-gateway-jenkins
 
 # Navigate to the project directory
 cd /var/www/ni-api-gateway-jenkins
