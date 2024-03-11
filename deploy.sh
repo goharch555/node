@@ -1,30 +1,30 @@
 #!/bin/bash
 
 # Navigate to the directory of the Jenkins workspace
-cd /var/lib/Jenkins/workspace/nodeapp
+cd /var/www/ni-api-gateway-jenkins
 
 # Copy files to the project directory
-cp -r * /var/nodeapp/ni-api-gateway
+cp -r * /var/www/ni-api-gateway-jenkins
 
 # Navigate to the project directory
-cd /var/nodeapp/ni-api-gateway
+cd /var/www/ni-api-gateway-jenkins
 
-# Find the process PID of instance 2443
-PID=$(lsof -t -i :2443)
+# NPM install new modules.
+npm i
 
-# If the PID is not empty, then kill it
-if [ -n "$PID" ]; then
-    kill $PID
+# BUILD THE PROJECT
+npm run build
+
+# Check if the PM2 process is running
+/usr/local/bin/pm2 list | grep ni-api-gateway > /dev/null
+
+if [ $? -eq 0 ]; then
+    # Restart the PM2 process
+    /usr/local/bin/pm2 restart ni-api-gateway
+else
+    # Start the PM2 process
+    /usr/local/bin/pm2 start dist/src/main.js --name ni-api-gateway
 fi
 
-# Stop the PM2 process
-/usr/local/bin/pm2 stop ni-api-gateway
-
-# Install Node.js dependencies
-npm install
-
-# Start the app with PM2
-/usr/local/bin/pm2 start ni-api-gateway --name ni-api-gateway
-
 # Output
-echo "Deployment successful. The app is running on port 2443 with a new PID."
+echo "Deployment successful. The app is running via PM2."
