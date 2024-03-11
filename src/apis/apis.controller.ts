@@ -25,6 +25,11 @@ export class ApisController {
     return res.json(data);
   }
 
+  @Post('/check-server')
+  async checkServer(@Req() req, @Res() res) {
+    return res.json({message: "Server is up"});
+  }
+
   @Post('/Transaction/V2/CardNonmon')
   async cardNonmon(@Req() req, @Res() res) {
     const data = await this.apisService.cardNonmon(req.body);
