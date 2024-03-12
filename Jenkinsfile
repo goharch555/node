@@ -11,7 +11,7 @@ pipeline {
         stage('Move to Project Directory') {
             steps {
                 // Move to the project directory
-                sh 'cd /var/www/nodeapp/'
+                sh 'cd /var/www/ni-api-gateway-jenkins'
             }
         }
         stage('Execute Script') {
