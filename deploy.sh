@@ -27,4 +27,4 @@ else
 fi
 
 # Output
-echo "Deployment successful. The app is running via PM2 by Mujtaba bhai."
+echo "Deployment successful. The app is running via PM2 by Mujtaba bhai yesterday."
